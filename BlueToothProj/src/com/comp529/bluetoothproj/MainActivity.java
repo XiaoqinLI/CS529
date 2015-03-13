@@ -61,6 +61,13 @@ public class MainActivity extends ListActivity {
 		    	pairAdapter.add(new Pair(device.getName() , device.getAddress()));
 		    }
 		}
+		
+		// Enabling discoverability
+		Intent discoverableIntent = new
+				Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+				discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+				startActivity(discoverableIntent);
+		
 		//To start discovering devices, simply call startDiscovery(). The process is asynchronous 
 		//and the method will immediately return with a boolean indicating whether discovery has successfully started.
 		mBluetoothAdapter.startDiscovery();
@@ -74,6 +81,7 @@ public class MainActivity extends ListActivity {
 		            // Get the BluetoothDevice object from the Intent
 		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 		            // Add the name and address to an array adapter to show in a ListView
+		            // Place holder, should check if it is already in the set.
 		            pairAdapter.add(new Pair(device.getName() , device.getAddress()));
 		        }
 		    }
@@ -90,6 +98,10 @@ public class MainActivity extends ListActivity {
 		 * discovery can significantly reduce the bandwidth available for the connection, 
 		 * so you should not perform discovery while connected.
 		 * */
+		
+
+				
+		
 	}
 
 	@Override
