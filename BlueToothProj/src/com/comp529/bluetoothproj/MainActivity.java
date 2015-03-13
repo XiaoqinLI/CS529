@@ -6,25 +6,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 	
 	private static final int REQUEST_ENABLE_BT = 1;
+	
 			
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		// get the default bluetooth adapter
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		if (mBluetoothAdapter == null) {
-		    // Device does not support Bluetooth
-		}
+		activatingBlueTooth(mBluetoothAdapter);
 		
-		if (!mBluetoothAdapter.isEnabled()) {
-		    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-		    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-		}
 		
 	}
 
@@ -45,5 +42,17 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void activatingBlueTooth(BluetoothAdapter mBluetoothAdapter){
+		
+		if (mBluetoothAdapter == null) {
+			Toast.makeText(MainActivity.this, "Device does not support Bluetooth", Toast.LENGTH_LONG).show();
+		}
+		
+		else if (!mBluetoothAdapter.isEnabled()) {
+		    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+		    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+		}
 	}
 }
