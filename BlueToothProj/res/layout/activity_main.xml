@@ -9,8 +9,19 @@
     tools:context="com.comp529.bluetoothproj.MainActivity" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+
+    <ListView
+        android:id="@+id/pairsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="103dp" >
+    </ListView>
 
 </RelativeLayout>
