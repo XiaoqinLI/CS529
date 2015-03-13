@@ -1,7 +1,6 @@
 package com.comp529.bluetoothproj.adapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.comp529.bluetoothproj.R;
 import com.comp529.bluetoothproj.model.Pair;

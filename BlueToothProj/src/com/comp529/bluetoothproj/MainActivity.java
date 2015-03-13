@@ -6,26 +6,31 @@ import java.util.Set;
 import com.comp529.bluetoothproj.adapter.PairAdapter;
 import com.comp529.bluetoothproj.model.Pair;
 
-import android.support.v7.app.ActionBarActivity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
 	
+	private static final String TAG = "MainActivity";
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static ArrayList<Pair> arrayOfPairs = new ArrayList<Pair>();
 	PairAdapter pairAdapter;
-			
+	BluetoothAdapter mBluetoothAdapter;
+	BroadcastReceiver mReceiver;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +48,7 @@ public class MainActivity extends ListActivity {
         ViewGroup header = (ViewGroup) inflater.inflate(R.layout.item_pair, pairListView, false);
 		
 		// get the default bluetooth adapter
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		// turn on BlueTooth, if not supported, then shut the activity down.
 		activatingBlueTooth(mBluetoothAdapter);
 		// check if there are devices already paired and known.
@@ -56,6 +61,35 @@ public class MainActivity extends ListActivity {
 		    	pairAdapter.add(new Pair(device.getName() , device.getAddress()));
 		    }
 		}
+		//To start discovering devices, simply call startDiscovery(). The process is asynchronous 
+		//and the method will immediately return with a boolean indicating whether discovery has successfully started.
+		mBluetoothAdapter.startDiscovery();
+		
+		// Create a BroadcastReceiver for ACTION_FOUND
+		mReceiver = new BroadcastReceiver() {
+		    public void onReceive(Context context, Intent intent) {
+		        String action = intent.getAction();
+		        // When discovery finds a device
+		        if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+		            // Get the BluetoothDevice object from the Intent
+		            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+		            // Add the name and address to an array adapter to show in a ListView
+		            pairAdapter.add(new Pair(device.getName() , device.getAddress()));
+		        }
+		    }
+		};
+		// Register the BroadcastReceiver
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+		
+		/* how are we gonna do this?
+		 * Caution: Performing device discovery is a heavy procedure for the Bluetooth adapter 
+		 * and will consume a lot of its resources. Once you have found a device to connect,
+		 * be certain that you always stop discovery with cancelDiscovery() before attempting
+		 * a connection. Also, if you already hold a connection with a device, then performing
+		 * discovery can significantly reduce the bandwidth available for the connection, 
+		 * so you should not perform discovery while connected.
+		 * */
 	}
 
 	@Override
@@ -95,5 +129,44 @@ public class MainActivity extends ListActivity {
 		    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 		    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
+	}
+	
+	@Override
+	protected void onStart() {
+		Log.i(TAG, "started the main activity");
+		super.onStart();
+	}
+
+	@Override
+	protected void onRestart() {
+		Log.i(TAG, "restarted the main activity");
+		super.onRestart();	
+		// adapter.clear();
+	}
+
+	@Override
+	protected void onResume() {
+		Log.i(TAG, "resumed the main activity");
+		super.onResume();		
+	}
+
+	@Override
+	protected void onPause() {
+		Log.i(TAG, "pause the main activity");
+		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		Log.i(TAG, "stopped the main activity");
+		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		Log.i(TAG, "destroyed the main activity");
+		super.onDestroy();
+		unregisterReceiver(mReceiver);
+		mBluetoothAdapter.cancelDiscovery();
 	}
 }
