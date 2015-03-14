@@ -27,6 +27,7 @@ public class MainActivity extends ListActivity {
 	private static final String TAG = "MainActivity";
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static ArrayList<Pair> arrayOfPairs = new ArrayList<Pair>();
+	
 	PairAdapter pairAdapter;
 	BluetoothAdapter mBluetoothAdapter;
 	BroadcastReceiver mReceiver;
@@ -36,6 +37,7 @@ public class MainActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		arrayOfPairs.clear();
 		pairAdapter = new PairAdapter(this, arrayOfPairs);
 		// add a fake testing data
 		pairAdapter.add(new Pair("foo", "woo"));
