@@ -64,6 +64,10 @@ public class MainActivity extends ListActivity {
 		    }
 		}
 		
+		/**
+		 * I guess we check connectable devices every 30 seconds or 15 seconds??
+		 */
+		
 		// Enabling discoverability
 		Intent discoverableIntent = new
 				Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
