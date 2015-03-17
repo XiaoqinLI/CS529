@@ -173,6 +173,12 @@ public class DeviceListActivity extends Activity {
 
             // Get the device MAC address, which is the last 17 chars in the View
             String info = ((TextView) v).getText().toString();
+            if (info.equals("No devices found")){
+            	finish();
+            }
+            else if (info.equals("No devices have been paired")){
+            	finish();
+            }
             String address = info.substring(info.length() - 17);
 
             // Create the result Intent and include the MAC address

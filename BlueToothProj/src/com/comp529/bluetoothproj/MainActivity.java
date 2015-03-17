@@ -184,7 +184,7 @@ public class MainActivity extends ListActivity {
 	protected void onDestroy() {
 		Log.i(TAG, "destroyed the main activity");
 		super.onDestroy();
-		unregisterReceiver(mReceiver);
+		this.unregisterReceiver(mReceiver);
 		mBluetoothAdapter.cancelDiscovery();
 	}
 }
