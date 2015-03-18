@@ -10,8 +10,9 @@ BlueTooth (android) (Done)
 
 Service (android) (Done)
 
-implememnt discover list and connection list
+implememnt discover list and connection list (in Queue)
 
-figure out how to multi connect
+figure out how to multi connect (doing)
 
-delete popup and confirmation function when pairing.
+delete popup and confirmation function when pairing. (optional)
+
