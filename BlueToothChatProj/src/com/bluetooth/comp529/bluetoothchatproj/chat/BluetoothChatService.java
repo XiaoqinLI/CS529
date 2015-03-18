@@ -30,7 +30,9 @@ import com.bluetooth.comp529.bluetoothchatproj.common.logger.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -60,6 +62,7 @@ public class BluetoothChatService {
     private AcceptThread mInsecureAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
+    private List<ConnectedThread> mConnectedThreads = new ArrayList<ConnectedThread>();
     private int mState;
     private HashSet<ConnectedThread> mConnectedThreadSet= new HashSet();
 
@@ -157,6 +160,8 @@ public class BluetoothChatService {
 //        }
 
         // Start the thread to connect with the given device
+        // Problem may be at here, each time mConnectThread points to a new ConnectThread,
+        // where is the previous "mConnectedThread" going?
         mConnectThread = new ConnectThread(device, secure);
         mConnectThread.start();
         setState(STATE_CONNECTING);
@@ -197,6 +202,7 @@ public class BluetoothChatService {
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
         mConnectedThread.start();
+        mConnectedThreads.add(mConnectedThread);
 
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
@@ -244,14 +250,16 @@ public class BluetoothChatService {
      */
     public void write(byte[] out) {
         // Create temporary object
-        ConnectedThread r;
+        List<ConnectedThread> r = new ArrayList<ConnectedThread>();
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
             if (mState != STATE_CONNECTED) return;
-            r = mConnectedThread;
+            r.addAll(mConnectedThreads);
         }
         // Perform the write unsynchronized
-        r.write(out);
+        for(ConnectedThread singleR : r){
+        	singleR.write(out);
+        }
     }
 
     /**
