@@ -30,6 +30,7 @@ import com.bluetooth.comp529.bluetoothchatproj.common.logger.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -60,6 +61,7 @@ public class BluetoothChatService {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mState;
+    private HashSet<ConnectedThread> mConnectedThreadSet= new HashSet();
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -113,10 +115,10 @@ public class BluetoothChatService {
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
+//        if (mConnectedThread != null) {
+//            mConnectedThread.cancel();
+//            mConnectedThread = null;
+//        }
 
         setState(STATE_LISTEN);
 
@@ -138,7 +140,7 @@ public class BluetoothChatService {
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
     public synchronized void connect(BluetoothDevice device, boolean secure) {
-        Log.d(TAG, "connect to: " + device);
+        Log.d(TAG, "connect to: " + device); // print mac address
 
         // Cancel any thread attempting to make a connection
         if (mState == STATE_CONNECTING) {
@@ -148,11 +150,11 @@ public class BluetoothChatService {
             }
         }
 
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
+//        // Cancel any thread currently running a connection
+//        if (mConnectedThread != null) {
+//            mConnectedThread.cancel();
+//            mConnectedThread = null;
+//        }
 
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device, secure);
@@ -176,21 +178,21 @@ public class BluetoothChatService {
             mConnectThread = null;
         }
 
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
+//        // Cancel any thread currently running a connection
+//        if (mConnectedThread != null) {
+//            mConnectedThread.cancel();
+//            mConnectedThread = null;
+//        }
 
-        // Cancel the accept thread because we only want to connect to one device
-        if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel();
-            mSecureAcceptThread = null;
-        }
-        if (mInsecureAcceptThread != null) {
-            mInsecureAcceptThread.cancel();
-            mInsecureAcceptThread = null;
-        }
+//        // Cancel the accept thread because we only want to connect to one device
+//        if (mSecureAcceptThread != null) {
+//            mSecureAcceptThread.cancel();
+//            mSecureAcceptThread = null;
+//        }
+//        if (mInsecureAcceptThread != null) {
+//            mInsecureAcceptThread.cancel();
+//            mInsecureAcceptThread = null;
+//        }
 
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
@@ -340,13 +342,20 @@ public class BluetoothChatService {
                                         mSocketType);
                                 break;
                             case STATE_NONE:
-                            case STATE_CONNECTED:
-                                // Either not ready or already connected. Terminate new socket.
-                                try {
+                            	// not ready. Terminate new socket
+                            	try {
                                     socket.close();
                                 } catch (IOException e) {
                                     Log.e(TAG, "Could not close unwanted socket", e);
                                 }
+                            	break;
+                            case STATE_CONNECTED:
+//                              // already connected. let's just stay connected	
+//                                try {
+//                                    socket.close();
+//                                } catch (IOException e) {
+//                                    Log.e(TAG, "Could not close unwanted socket", e);
+//                                }
                                 break;
                         }
                     }
@@ -409,7 +418,8 @@ public class BluetoothChatService {
             try {
                 // This is a blocking call and will only return on a
                 // successful connection or an exception
-                mmSocket.connect();
+            	// this will make mmSocket as a connected Bluetooth Socket
+                mmSocket.connect(); // should I create a new socket??
             } catch (IOException e) {
                 // Close the socket
                 try {

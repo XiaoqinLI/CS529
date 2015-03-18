@@ -94,17 +94,19 @@ public class BluetoothChatFragment extends Fragment {
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        // If the adapter is null, then Bluetooth is not supported
+        // If the adapter is null, then Bluetooth is not supported on this device
         if (mBluetoothAdapter == null) {
             FragmentActivity activity = getActivity();
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             activity.finish();
         }
+        
+        ensureDiscoverable();
     }
 
 
     @Override
-    public void onStart() {
+    public void onStart() {  // enable BlueTooth at onStart()
         super.onStart();
         // If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
@@ -198,6 +200,9 @@ public class BluetoothChatFragment extends Fragment {
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
             startActivity(discoverableIntent);
         }
+//    	Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//    	discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+//    	startActivity(discoverableIntent);
     }
 
     /**
@@ -368,6 +373,7 @@ public class BluetoothChatFragment extends Fragment {
         // Get the BluetoothDevice object
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
+        Log.i(TAG, "BEGIN connecting to:" + device.getName());
         mChatService.connect(device, secure);
     }
 
