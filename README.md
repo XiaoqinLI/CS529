@@ -16,3 +16,5 @@ figure out how to multi connect (doing)
 
 delete popup and confirmation function when pairing. (optional)
 
+Why mChatService is gone when exiting app??
+
