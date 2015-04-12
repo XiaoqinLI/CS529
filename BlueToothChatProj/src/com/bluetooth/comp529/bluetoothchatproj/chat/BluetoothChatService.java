@@ -64,7 +64,6 @@ public class BluetoothChatService {
     private ConnectedThread mConnectedThread;
     private List<ConnectedThread> mConnectedThreads = new ArrayList<ConnectedThread>();
     private int mState;
-    private HashSet<ConnectedThread> mConnectedThreadSet= new HashSet();
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -102,6 +101,13 @@ public class BluetoothChatService {
      */
     public synchronized int getState() {
         return mState;
+    }
+    
+    /**
+     * Return the number of connected socket
+     */
+    public synchronized int getConnectedNumber(){
+    	return this.mConnectedThreads.size();
     }
 
     /**
@@ -253,7 +259,8 @@ public class BluetoothChatService {
         List<ConnectedThread> r = new ArrayList<ConnectedThread>();
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+//            if (mState != STATE_CONNECTED) return;
+        	if(mConnectedThreads.size() == 0) return;
             r.addAll(mConnectedThreads);
         }
         // Perform the write unsynchronized

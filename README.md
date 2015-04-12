@@ -10,11 +10,31 @@ BlueTooth (android) (Done)
 
 Service (android) (Done)
 
-implememnt discover list and connection list (in Queue)
+figure out how to multi connect (Done with bug)
 
-figure out how to multi connect (doing)
+delete popup and confirmation function when connecting. (Done)
 
-delete popup and confirmation function when pairing. (optional)
+
+##********Do do and Bug List*********************
+implememnt discover list and connection list (low priority for now, just modify stuff in DeviceListActivity):
+
+To get all paired devices, what we do:
+if (pairedDevices.size() > 0) {
+	findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
+	for (BluetoothDevice device : pairedDevices) {
+		pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+	}
+} else {
+		String noDevices = getResources().getText(R.string.none_paired).toString();
+		pairedDevicesArrayAdapter.add(noDevices);
+}
+
+To get all discoverable device, what we do:
+
+
+
 
 Why mChatService is gone when exiting app??
+
+
 

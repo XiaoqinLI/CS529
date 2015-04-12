@@ -102,12 +102,14 @@ public class BluetoothChatFragment extends Fragment {
         }
         
         ensureDiscoverable();
+        
     }
 
 
     @Override
     public void onStart() {  // enable BlueTooth at onStart()
         super.onStart();
+        Log.d(TAG, "call onStart");
         // If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
         if (!mBluetoothAdapter.isEnabled()) {
@@ -115,6 +117,7 @@ public class BluetoothChatFragment extends Fragment {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             // Otherwise, setup the chat session
         } else if (mChatService == null) {
+        	Log.d(TAG, "mChatService is NULL");
             setupChat();
         }
     }
@@ -122,14 +125,17 @@ public class BluetoothChatFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mChatService != null) {
-            mChatService.stop();
-        }
+        Log.d(TAG, "call onDestory");
+        Log.d(TAG, "Exit The App");
+//        if (mChatService != null) {
+//            mChatService.stop();
+//        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "call onResume");
 
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
@@ -185,7 +191,8 @@ public class BluetoothChatFragment extends Fragment {
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(getActivity(), mHandler);
-
+        Log.d(TAG, "mChatService is Not NULL now");
+        
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
     }
@@ -212,10 +219,15 @@ public class BluetoothChatFragment extends Fragment {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+//            Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+    	
+    	if (mChatService.getConnectedNumber() == 0) {
+          Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
+          return;
+      }
 
         // Check that there's actually something to send
         if (message.length() > 0) {
