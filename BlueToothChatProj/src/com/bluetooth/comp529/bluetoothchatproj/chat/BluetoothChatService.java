@@ -259,8 +259,8 @@ public class BluetoothChatService {
         List<ConnectedThread> r = new ArrayList<ConnectedThread>();
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-//            if (mState != STATE_CONNECTED) return;
-        	if(mConnectedThreads.size() == 0) return;
+            if (mState != STATE_CONNECTED) return;
+//        	if(mConnectedThreads.size() == 0) return;
             r.addAll(mConnectedThreads);
         }
         // Perform the write unsynchronized

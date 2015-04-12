@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -112,29 +111,10 @@ public class DeviceListActivity extends Activity {
             public void onClick(View v) {
             	try{
             		doDiscovery();
-            		TimeUnit.SECONDS.sleep(1);
+            		TimeUnit.MILLISECONDS.sleep(200);
             	}catch (InterruptedException e) {
             	    //Handle exception
-            	}
-//            	refreshPairAdapter();
-//            	final Handler handler1 = new Handler();
-//            	handler1.postDelayed(new Runnable() {
-//            	    @Override
-//            	    public void run() {
-//            	        // Do something after 5s = 5000ms
-//                        doDiscovery();
-//            	    }
-//            	}, 1000);
-//            	
-//            	final Handler handler2 = new Handler();
-//            	handler2.postDelayed(new Runnable() {
-//            	    @Override
-//            	    public void run() {
-//            	        // Do something after 5s = 5000ms
-//                        refreshPairAdapter();
-//            	    }
-//            	}, 1000);
-//            	
+            	}            	
                 v.setVisibility(View.GONE);
             }
         });
@@ -168,7 +148,7 @@ public class DeviceListActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        Log.d(TAG, "onDistroy()");
         // Make sure we're not doing discovery anymore
         if (mBtAdapter != null) {
             mBtAdapter.cancelDiscovery();
@@ -217,16 +197,14 @@ public class DeviceListActivity extends Activity {
                      pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
              	}  
 //                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-
-             }
-             
+             } 
          } else {
              String noDevices = getResources().getText(R.string.none_paired).toString();
              pairedDevicesArrayAdapter.add(noDevices);
          }
     	 if (pairedDevicesArrayAdapter.getCount() == 0){
     		 String noDevices = getResources().getText(R.string.none_paired).toString();
-    		 pairedDevicesArrayAdapter.add("paired devices are not discoverable");
+    		 pairedDevicesArrayAdapter.add("All paired devices are not discoverable");
     	 }
     	 
     }

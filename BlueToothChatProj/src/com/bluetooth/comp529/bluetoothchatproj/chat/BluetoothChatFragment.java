@@ -16,6 +16,8 @@
 
 package com.bluetooth.comp529.bluetoothchatproj.chat;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -66,6 +68,7 @@ public class BluetoothChatFragment extends Fragment {
      * Name of the connected device
      */
     private String mConnectedDeviceName = null;
+    private ArrayList<String> mAllConnectedDevicesName = new ArrayList<String>();
 
     /**
      * Array adapter for the conversation thread
@@ -127,9 +130,9 @@ public class BluetoothChatFragment extends Fragment {
         super.onDestroy();
         Log.d(TAG, "call onDestory");
         Log.d(TAG, "Exit The App");
-//        if (mChatService != null) {
-//            mChatService.stop();
-//        }
+        if (mChatService != null) {
+            mChatService.stop();
+        }
     }
 
     @Override
@@ -201,15 +204,13 @@ public class BluetoothChatFragment extends Fragment {
      * Makes this device discoverable.
      */
     private void ensureDiscoverable() {
+    	// check scan mode so that way we do not have to ask again once discoverable.
         if (mBluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
             startActivity(discoverableIntent);
         }
-//    	Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//    	discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-//    	startActivity(discoverableIntent);
     }
 
     /**
@@ -219,15 +220,15 @@ public class BluetoothChatFragment extends Fragment {
      */
     private void sendMessage(String message) {
         // Check that we're actually connected before trying anything
-//        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-//            Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+            Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
     	
-    	if (mChatService.getConnectedNumber() == 0) {
-          Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
-          return;
-      }
+//        if (mChatService.getConnectedNumber() == 0) {
+//        	Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
+//        	return;
+//        }
 
         // Check that there's actually something to send
         if (message.length() > 0) {

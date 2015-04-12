@@ -16,7 +16,7 @@ delete popup and confirmation function when connecting. (Done)
 
 update discover list and real pair list (Done)
 
-##********Do do and Bug List*********************
+##********To do and Bug List*********************
 
 Why mChatService is gone when exiting app?? how to not exit.
 
