@@ -341,7 +341,8 @@ public class BluetoothChatService extends Service{
             BluetoothSocket socket = null;
 
             // Listen to the server socket if we're not connected
-            while (mState != STATE_CONNECTED) {
+            while (true){
+//            while (mState != STATE_CONNECTED) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
@@ -357,6 +358,7 @@ public class BluetoothChatService extends Service{
                         switch (mState) {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
+                            case STATE_CONNECTED:
                                 // Situation normal. Start the connected thread.
                                 connected(socket, socket.getRemoteDevice(),
                                         mSocketType);
@@ -369,14 +371,14 @@ public class BluetoothChatService extends Service{
                                     Log.e(TAG, "Could not close unwanted socket", e);
                                 }
                             	break;
-                            case STATE_CONNECTED:
+//                            case STATE_CONNECTED:
 //                              // already connected. let's just stay connected	
 //                                try {
 //                                    socket.close();
 //                                } catch (IOException e) {
 //                                    Log.e(TAG, "Could not close unwanted socket", e);
 //                                }
-                                break;
+//                                break;
                         }
                     }
                 }
