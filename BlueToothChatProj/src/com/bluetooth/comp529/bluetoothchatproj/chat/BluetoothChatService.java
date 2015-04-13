@@ -16,13 +16,16 @@
 
 package com.bluetooth.comp529.bluetoothchatproj.chat;
 
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 
 import com.bluetooth.comp529.bluetoothchatproj.common.logger.Log;
@@ -31,8 +34,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -41,7 +46,7 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothChatService {
+public class BluetoothChatService extends Service{
     // Debugging
     private static final String TAG = "BluetoothChatService";
 
@@ -62,7 +67,7 @@ public class BluetoothChatService {
     private AcceptThread mInsecureAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-    private List<ConnectedThread> mConnectedThreads = new ArrayList<ConnectedThread>();
+    public Map<String, ConnectedThread> mConnectedThreads = new HashMap<String, ConnectedThread>();
     private int mState;
 
     // Constants that indicate the current connection state
@@ -208,7 +213,7 @@ public class BluetoothChatService {
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket, socketType);
         mConnectedThread.start();
-        mConnectedThreads.add(mConnectedThread);
+        mConnectedThreads.put(device.getAddress(),mConnectedThread);
 
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
@@ -254,19 +259,19 @@ public class BluetoothChatService {
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
-    public void write(byte[] out) {
+    public void write(byte[] out, String macAddress) {
         // Create temporary object
-        List<ConnectedThread> r = new ArrayList<ConnectedThread>();
+//    	Map<String, ConnectedThread> r = new HashMap<String, ConnectedThread>();
+//        List<ConnectedThread> r = new ArrayList<ConnectedThread>();
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
             if (mState != STATE_CONNECTED) return;
 //        	if(mConnectedThreads.size() == 0) return;
-            r.addAll(mConnectedThreads);
+//            r.addAll(mConnectedThreads);
         }
         // Perform the write unsynchronized
-        for(ConnectedThread singleR : r){
-        	singleR.write(out);
-        }
+        mConnectedThreads.get(macAddress).write(out);
+
     }
 
     /**
@@ -541,4 +546,10 @@ public class BluetoothChatService {
             }
         }
     }
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

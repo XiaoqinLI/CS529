@@ -36,7 +36,9 @@ import com.bluetooth.comp529.bluetoothchatproj.common.logger.Log;
 import com.bluetooth.comp529.bluetoothchatproj.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +74,7 @@ public class DeviceListActivity extends Activity {
      * all discoverable paired devices
      */
     private ArrayAdapter<String> pairedDevicesArrayAdapter;
-    
+    private Map<String, String> pairedDevicesMap = new HashMap<String, String>();;
     /**
      * Newly discovered devices, saved in adapter
      */
@@ -82,6 +84,7 @@ public class DeviceListActivity extends Activity {
      * discovered devices, save in devicesList
      */
     private Set<String> mNewDevicesSet = new HashSet<String>();
+    private Map<String, String> discoverableDevicesMap = new HashMap<String, String>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +101,7 @@ public class DeviceListActivity extends Activity {
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         pairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
-        
+        pairedDevicesMap = new HashMap<String, String>();
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         
@@ -121,7 +124,6 @@ public class DeviceListActivity extends Activity {
 
         
         mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
-
         // Find and set up the ListView for paired devices
         ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
@@ -195,6 +197,7 @@ public class DeviceListActivity extends Activity {
              	//only show those devices are both paired and discoverable:
              	if (mNewDevicesSet.contains(device.getAddress())){
                      pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                     pairedDevicesMap.put(device.getAddress(), device.getName());
              	}  
 //                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
              } 
@@ -220,10 +223,14 @@ public class DeviceListActivity extends Activity {
 
             // Get the device MAC address, which is the last 17 chars in the View
             String info = ((TextView) v).getText().toString();
+            Log.d(TAG, info);
             if (info.equals("No devices found")){// this string is system default set I guess
             	finish();
             }
             else if (info.equals("No devices have been paired")){// this string is system default set I guess
+            	finish();
+            }
+            else if (info.equals("All paired devices are not discoverable")){
             	finish();
             }
             else{
@@ -261,6 +268,7 @@ public class DeviceListActivity extends Activity {
                 mNewDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
 //                Log.d(TAG, device.getAddress());
                 mNewDevicesSet.add(device.getAddress());
+                discoverableDevicesMap.put(device.getAddress(), device.getName());
                 // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);

@@ -17,6 +17,8 @@
 package com.bluetooth.comp529.bluetoothchatproj.chat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -68,7 +70,7 @@ public class BluetoothChatFragment extends Fragment {
      * Name of the connected device
      */
     private String mConnectedDeviceName = null;
-    private ArrayList<String> mAllConnectedDevicesName = new ArrayList<String>();
+    private Set<String> mAllConnectedDevicesAddress = new HashSet<String>();
 
     /**
      * Array adapter for the conversation thread
@@ -139,7 +141,9 @@ public class BluetoothChatFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "call onResume");
-
+        Intent serviceIntent = new Intent(this.getActivity(), BluetoothChatService.class);
+//        BluetoothChatFragment.getContext().this.startService(serviceIntent);
+        getActivity().startService(serviceIntent);
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
@@ -187,7 +191,7 @@ public class BluetoothChatFragment extends Fragment {
                 if (null != view) {
                     TextView textView = (TextView) view.findViewById(R.id.edit_text_out);
                     String message = textView.getText().toString();
-                    sendMessage(message);
+                    sendMessageToAll(message);
                 }
             }
         });
@@ -218,7 +222,17 @@ public class BluetoothChatFragment extends Fragment {
      *
      * @param message A string of text to send.
      */
-    private void sendMessage(String message) {
+    protected void sendMessage(String message, String address){
+    	//TODO mChatService.write(send, address)
+    	// Check that there's actually something to send
+        if (message.length() > 0) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            byte[] send = message.getBytes();
+            mChatService.write(send, address);
+            
+        }
+    }
+    private void sendMessageToAll(String message) {
         // Check that we're actually connected before trying anything
         if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
             Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
@@ -229,17 +243,15 @@ public class BluetoothChatFragment extends Fragment {
 //        	Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
 //        	return;
 //        }
-
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            mChatService.write(send);
-
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
+        
+        //TODO for all connected devices, call sendMessage()
+        for (String addressString : mChatService.mConnectedThreads.keySet()){
+        	sendMessage(message, addressString);
         }
+     // Reset out string buffer to zero and clear the edit text field
+        mOutStringBuffer.setLength(0);
+        mOutEditText.setText(mOutStringBuffer);
+       
     }
 
     /**
@@ -251,7 +263,7 @@ public class BluetoothChatFragment extends Fragment {
             // If the action is a key-up event on the return key, send the message
             if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) {
                 String message = view.getText().toString();
-                sendMessage(message);
+                sendMessageToAll(message);
             }
             return true;
         }
@@ -352,12 +364,12 @@ public class BluetoothChatFragment extends Fragment {
                     connectDevice(data, true);
                 }
                 break;
-            case REQUEST_CONNECT_DEVICE_INSECURE:
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(data, false);
-                }
-                break;
+//            case REQUEST_CONNECT_DEVICE_INSECURE:
+//                // When DeviceListActivity returns with a device to connect
+//                if (resultCode == Activity.RESULT_OK) {
+//                    connectDevice(data, false);
+//                }
+//                break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
@@ -385,6 +397,10 @@ public class BluetoothChatFragment extends Fragment {
                 .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
         // Get the BluetoothDevice object
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        
+        // save the address of this newly connected device
+        mAllConnectedDevicesAddress.add(address);
+        
         // Attempt to connect to the device
         Log.i(TAG, "BEGIN connecting to:" + device.getName());
         mChatService.connect(device, secure);
@@ -404,12 +420,12 @@ public class BluetoothChatFragment extends Fragment {
                 startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
                 return true;
             }
-            case R.id.insecure_connect_scan: {
-                // Launch the DeviceListActivity to see devices and do scan
-                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-                return true;
-            }
+//            case R.id.insecure_connect_scan: {
+//                // Launch the DeviceListActivity to see devices and do scan
+//                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+//                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+//                return true;
+//            }
             case R.id.discoverable: {
                 // Ensure this device is discoverable by others
                 ensureDiscoverable();
