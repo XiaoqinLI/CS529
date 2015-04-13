@@ -197,7 +197,7 @@ public class BluetoothChatFragment extends Fragment {
         });
 
         // Initialize the BluetoothChatService to perform bluetooth connections
-        mChatService = new BluetoothChatService(getActivity(), mHandler);
+        mChatService = new BluetoothChatService(mHandler);
         Log.d(TAG, "mChatService is Not NULL now");
         
         // Initialize the buffer for outgoing messages
