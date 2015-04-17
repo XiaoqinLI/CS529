@@ -298,16 +298,21 @@ public class BluetoothChatService{
     /**
      * Indicate that the connection was lost and notify the UI Activity.
      */
-    private void connectionLost() {
+    private void connectionLost(String deviceName, String deviceAddress) {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
+//        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Constants.TOAST, "Device connection was lost");
+        
+        Message msg = mHandler.obtainMessage(Constants.MESSAGE_LOST);
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Device connection was lost");
+        bundle.putString("DEVICENAME", deviceAddress);
+        
         msg.setData(bundle);
         mHandler.sendMessage(msg);
-
+        
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+//        BluetoothChatService.this.start();
     }
 
     /**
@@ -490,17 +495,22 @@ public class BluetoothChatService{
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+        private String remoteDeviceName;
+        private String remoteDeviceAddress;
 
         public ConnectedThread(BluetoothSocket socket, String socketType) {
             Log.d(TAG, "create ConnectedThread: " + socketType);
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
+            
 
             // Get the BluetoothSocket input and output streams
             try {
-                tmpIn = socket.getInputStream();
+                tmpIn = socket.getInputStream();                
                 tmpOut = socket.getOutputStream();
+                remoteDeviceName = socket.getRemoteDevice().getName(); // added device name here
+                remoteDeviceAddress = socket.getRemoteDevice().getAddress();
             } catch (IOException e) {
                 Log.e(TAG, "temp sockets not created", e);
             }
@@ -525,9 +535,9 @@ public class BluetoothChatService{
                             .sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
-                    connectionLost();
+                    connectionLost(remoteDeviceName, remoteDeviceAddress);
                     // Start the service over to restart listening mode
-                    BluetoothChatService.this.start();
+//                    BluetoothChatService.this.start();
                     break;
                 }
             }
