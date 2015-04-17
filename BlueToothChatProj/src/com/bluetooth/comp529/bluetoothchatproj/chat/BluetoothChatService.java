@@ -173,9 +173,13 @@ public class BluetoothChatService{
         // Start the thread to connect with the given device
         // Problem may be at here, each time mConnectThread points to a new ConnectThread,
         // where is the previous "mConnectedThread" going?
-        mConnectThread = new ConnectThread(device, secure);
-        mConnectThread.start();
-        setState(STATE_CONNECTING);
+        
+        if (!mConnectedThreads.containsKey(device.getAddress())){
+        	mConnectThread = new ConnectThread(device, secure);
+            mConnectThread.start();
+            setState(STATE_CONNECTING);
+        }      
+        
     }
 
     /**
@@ -361,7 +365,11 @@ public class BluetoothChatService{
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
                             case STATE_CONNECTED:
-                                // Situation normal. Start the connected thread.
+                            	// Situation normal. Start the connected thread.
+                            	if (!mConnectedThreads.containsKey(socket.getRemoteDevice().getAddress())){
+                            		connected(socket, socket.getRemoteDevice(),
+                            				mSocketType);
+                            	}
                                 connected(socket, socket.getRemoteDevice(),
                                         mSocketType);
                                 break;
