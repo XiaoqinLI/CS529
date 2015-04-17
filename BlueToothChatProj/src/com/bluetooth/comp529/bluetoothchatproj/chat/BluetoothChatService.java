@@ -46,7 +46,7 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothChatService extends Service{
+public class BluetoothChatService{
     // Debugging
     private static final String TAG = "BluetoothChatService";
 
@@ -189,10 +189,10 @@ public class BluetoothChatService extends Service{
         Log.d(TAG, "connected, Socket Type:" + socketType);
 
         // Cancel the thread that completed the connection
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
+//        if (mConnectThread != null) {
+//            mConnectThread.cancel();
+//            mConnectThread = null;
+//        }
 
 //        // Cancel any thread currently running a connection
 //        if (mConnectedThread != null) {
@@ -211,10 +211,12 @@ public class BluetoothChatService extends Service{
 //        }
 
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket, socketType);
-        mConnectedThread.start();
-        mConnectedThreads.put(device.getAddress(),mConnectedThread);
-
+        if (!mConnectedThreads.containsKey(device.getAddress())){
+        	mConnectedThread = new ConnectedThread(socket, socketType);
+            mConnectedThread.start();
+            mConnectedThreads.put(device.getAddress(),mConnectedThread);
+        }
+        
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
@@ -549,9 +551,4 @@ public class BluetoothChatService extends Service{
         }
     }
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
