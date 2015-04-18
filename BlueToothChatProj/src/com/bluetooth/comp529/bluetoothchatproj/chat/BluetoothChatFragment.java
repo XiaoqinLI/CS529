@@ -17,7 +17,9 @@
 package com.bluetooth.comp529.bluetoothchatproj.chat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.ActionBar;
@@ -352,6 +354,12 @@ public class BluetoothChatFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                     break;
+                case Constants.MESSAGE_LOST:
+                	String deviceAddress = msg.getData().getString("DEVICEADDRESS");
+                	mChatService.mConnectedThreads.remove(deviceAddress);
+                	Toast.makeText(activity, msg.getData().getString("DEVICEADDRESS"),
+                             Toast.LENGTH_SHORT).show();
+                	
             }
         }
     };

@@ -306,8 +306,8 @@ public class BluetoothChatService{
         
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_LOST);
         Bundle bundle = new Bundle();
-        bundle.putString("DEVICENAME", deviceAddress);
-        
+        bundle.putString("DEVICEADDRESS", deviceAddress);
+       
         msg.setData(bundle);
         mHandler.sendMessage(msg);
         
