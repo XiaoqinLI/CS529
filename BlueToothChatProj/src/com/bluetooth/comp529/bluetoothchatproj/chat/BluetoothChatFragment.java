@@ -134,9 +134,9 @@ public class BluetoothChatFragment extends Fragment {
         super.onDestroy();
         Log.d(TAG, "call onDestory");
         Log.d(TAG, "Exit The App");
-//        if (mChatService != null) {
-//            mChatService.stop();
-//        }
+        if (mChatService != null) {
+            mChatService.stop();
+        }
     }
 
     @Override
@@ -356,10 +356,9 @@ public class BluetoothChatFragment extends Fragment {
                     break;
                 case Constants.MESSAGE_LOST:
                 	String deviceAddress = msg.getData().getString("DEVICEADDRESS");
-                	mChatService.mConnectedThreads.remove(deviceAddress);
                 	Toast.makeText(activity, msg.getData().getString("DEVICEADDRESS"),
-                             Toast.LENGTH_SHORT).show();
-                	
+                            Toast.LENGTH_SHORT).show();
+                	mChatService.mConnectedThreads.remove(deviceAddress); 	
             }
         }
     };

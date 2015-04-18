@@ -180,14 +180,16 @@ public class BluetoothChatService{
         	mConnectedThread = new ConnectedThread(socket, socketType);
             mConnectedThread.start();
             mConnectedThreads.put(device.getAddress(),mConnectedThread);
+            
+         // Send the name of the connected device back to the UI Activity
+            Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.DEVICE_NAME, device.getName());
+            bundle.putString("DEVICEADDRESS", socket.getRemoteDevice().getAddress());
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+            
         }
-        
-        // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.DEVICE_NAME, device.getName());
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
 
         setState(STATE_CONNECTED);
     }
