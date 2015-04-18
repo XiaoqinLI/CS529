@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tour_main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/chromeGray" >
+
+    <TextView
+        android:id="@+id/LargeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8.0pt"
+        android:layout_marginStart="8.0pt"
+        android:layout_marginTop="12.0dip"
+        android:text="Contacts"
+        android:textAppearance="?android:textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/smalltitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/LargeTitle"
+        android:layout_marginLeft="8.0pt"
+        android:layout_marginStart="8.0pt"
+        android:text="Chat with people in the network"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="#777777" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/LargeTitle"
+        android:layout_marginRight="8.0pt"
+        android:layout_marginEnd="8.0pt"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+
+
+
+ 
+    <ListView
+        android:id="@+id/list_view_contacts"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/smalltitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="3.0pt"
+        android:layout_marginRight="3.0pt"
+        android:layout_marginTop="2.0pt"
+        android:gravity="center"
+        android:divider="@null"
+        android:transcriptMode="alwaysScroll" >
+
+    </ListView>
+ 
+</RelativeLayout>
