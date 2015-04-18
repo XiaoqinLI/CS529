@@ -134,9 +134,9 @@ public class BluetoothChatFragment extends Fragment {
         super.onDestroy();
         Log.d(TAG, "call onDestory");
         Log.d(TAG, "Exit The App");
-        if (mChatService != null) {
-            mChatService.stop();
-        }
+//        if (mChatService != null) {
+//            mChatService.stop();
+//        }
     }
 
     @Override

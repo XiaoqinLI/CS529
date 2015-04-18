@@ -16,16 +16,12 @@
 
 package com.bluetooth.comp529.bluetoothchatproj.chat;
 
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 
 import com.bluetooth.comp529.bluetoothchatproj.common.logger.Log;
@@ -33,10 +29,7 @@ import com.bluetooth.comp529.bluetoothchatproj.common.logger.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -128,12 +121,6 @@ public class BluetoothChatService{
             mConnectThread = null;
         }
 
-        // Cancel any thread currently running a connection
-//        if (mConnectedThread != null) {
-//            mConnectedThread.cancel();
-//            mConnectedThread = null;
-//        }
-
         setState(STATE_LISTEN);
 
         // Start the thread to listen on a BluetoothServerSocket
@@ -170,16 +157,12 @@ public class BluetoothChatService{
 //            mConnectedThread = null;
 //        }
 
-        // Start the thread to connect with the given device
-        // Problem may be at here, each time mConnectThread points to a new ConnectThread,
-        // where is the previous "mConnectedThread" going?
-        
+        // Start the thread to connect with the given device   
         if (!mConnectedThreads.containsKey(device.getAddress())){
         	mConnectThread = new ConnectThread(device, secure);
             mConnectThread.start();
             setState(STATE_CONNECTING);
-        }      
-        
+        }       
     }
 
     /**
@@ -191,28 +174,6 @@ public class BluetoothChatService{
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device, final String socketType) {
         Log.d(TAG, "connected, Socket Type:" + socketType);
-
-        // Cancel the thread that completed the connection
-//        if (mConnectThread != null) {
-//            mConnectThread.cancel();
-//            mConnectThread = null;
-//        }
-
-//        // Cancel any thread currently running a connection
-//        if (mConnectedThread != null) {
-//            mConnectedThread.cancel();
-//            mConnectedThread = null;
-//        }
-
-//        // Cancel the accept thread because we only want to connect to one device
-//        if (mSecureAcceptThread != null) {
-//            mSecureAcceptThread.cancel();
-//            mSecureAcceptThread = null;
-//        }
-//        if (mInsecureAcceptThread != null) {
-//            mInsecureAcceptThread.cancel();
-//            mInsecureAcceptThread = null;
-//        }
 
         // Start the thread to manage the connection and perform transmissions
         if (!mConnectedThreads.containsKey(device.getAddress())){
@@ -268,13 +229,14 @@ public class BluetoothChatService{
     public void write(byte[] out, String macAddress) {
         // Create temporary object
 //    	Map<String, ConnectedThread> r = new HashMap<String, ConnectedThread>();
-//        List<ConnectedThread> r = new ArrayList<ConnectedThread>();
+    	
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
             if (mState != STATE_CONNECTED) return;
 //        	if(mConnectedThreads.size() == 0) return;
 //            r.addAll(mConnectedThreads);
         }
+        
         // Perform the write unsynchronized
         mConnectedThreads.get(macAddress).write(out);
 
@@ -353,7 +315,6 @@ public class BluetoothChatService{
 
             // Listen to the server socket if we're not connected
             while (true){
-//            while (mState != STATE_CONNECTED) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
@@ -387,12 +348,7 @@ public class BluetoothChatService{
                                 }
                             	break;
 //                            case STATE_CONNECTED:
-//                              // already connected. let's just stay connected	
-//                                try {
-//                                    socket.close();
-//                                } catch (IOException e) {
-//                                    Log.e(TAG, "Could not close unwanted socket", e);
-//                                }
+//                              
 //                                break;
                         }
                     }
