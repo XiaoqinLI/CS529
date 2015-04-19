@@ -359,7 +359,6 @@ public class BluetoothChatFragment extends Fragment {
                 	String deviceAddress = msg.getData().getString("DEVICEADDRESS");
                 	mChatService.mConnectedThreads.get(deviceAddress).cancel();
                 	mChatService.mConnectedThreads.remove(deviceAddress);
-                	
                 	break;
             }
         }

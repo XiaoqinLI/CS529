@@ -345,8 +345,6 @@ public class BluetoothChatService{
                             		connected(socket, socket.getRemoteDevice(),
                             				mSocketType);
                             	}
-                                connected(socket, socket.getRemoteDevice(),
-                                        mSocketType);
                                 break;
                             case STATE_NONE:
                             	// not ready. Terminate new socket
