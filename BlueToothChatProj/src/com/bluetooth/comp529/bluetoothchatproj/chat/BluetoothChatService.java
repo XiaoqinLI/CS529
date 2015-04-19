@@ -204,6 +204,13 @@ public class BluetoothChatService{
             mConnectThread.cancel();
             mConnectThread = null;
         }
+        
+        for(String adds : mConnectedThreads.keySet()){
+        	mConnectedThreads.get(adds).cancel();
+        }
+        for(String adds : mConnectedThreads.keySet()){
+        	mConnectedThreads.remove(adds);
+        }
 
         if (mConnectedThread != null) {
             mConnectedThread.cancel();
@@ -449,7 +456,7 @@ public class BluetoothChatService{
      * This thread runs during a connection with a remote device.
      * It handles all incoming and outgoing transmissions.
      */
-    private class ConnectedThread extends Thread {
+    class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
