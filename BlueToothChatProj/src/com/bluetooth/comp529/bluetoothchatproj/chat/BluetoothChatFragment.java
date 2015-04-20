@@ -355,10 +355,11 @@ public class BluetoothChatFragment extends Fragment {
                     }
                     break;
                 case Constants.MESSAGE_LOST:
+                	
                 	String deviceAddress = msg.getData().getString("DEVICEADDRESS");
-                	Toast.makeText(activity, msg.getData().getString("DEVICEADDRESS"),
-                            Toast.LENGTH_SHORT).show();
-                	mChatService.mConnectedThreads.remove(deviceAddress); 	
+                	mChatService.mConnectedThreads.get(deviceAddress).cancel();
+                	mChatService.mConnectedThreads.remove(deviceAddress);
+                	break;
             }
         }
     };
