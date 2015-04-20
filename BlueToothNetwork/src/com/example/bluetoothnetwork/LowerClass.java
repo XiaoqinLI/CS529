@@ -8,11 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import com.example.bluetoothnetwork.util.Data;
 import com.example.bluetoothnetwork.util.Device;
 import com.example.bluetoothnetwork.util.User;
-
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -93,7 +92,8 @@ public abstract  class LowerClass extends Service{
     /**
      * The Handler that gets information back from the BluetoothChatService
      */
-    private final Handler mHandler = new Handler() {
+    @SuppressLint("HandlerLeak")
+	private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -105,6 +105,7 @@ public abstract  class LowerClass extends Service{
 				try {
 					receive = deserialize(readBuf);
 					// put information from readMessage into Data
+					Log.i("LowerClass", "data received");
                     onReceivingData(receive);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -122,10 +123,12 @@ public abstract  class LowerClass extends Service{
                     break;
                 case Constants.MESSAGE_LOST:
                 	String deviceAddress = msg.getData().getString("DEVICEADDRESS");
-                	mChatService.mConnectedThreads.get(deviceAddress).cancel();
-                	mChatService.mConnectedThreads.remove(deviceAddress);
-                	user = new User("", macToLong(deviceAddress));
-                	onNeighborLeaving(user);
+                	if(mChatService!=null && mChatService.mConnectedThreads!=null && mChatService.mConnectedThreads.containsKey(deviceAddress)){
+	                	mChatService.mConnectedThreads.get(deviceAddress).cancel();
+	                	mChatService.mConnectedThreads.remove(deviceAddress);
+	                	user = new User("", macToLong(deviceAddress));
+	                	onNeighborLeaving(user);
+                	}
                 	break;
 
             }

@@ -11,7 +11,7 @@ public class RemoveNeighborData implements Data{
 	private User sender;
 	private User receiver;
 		
-    private List<User> neighbors;
+    private User removed;
 	
 	@Override
 	public User getSender() {
@@ -25,20 +25,20 @@ public class RemoveNeighborData implements Data{
 		return this.receiver;
 	}
 	
-	public RemoveNeighborData(User sender, User receiver, List<User> neighbors){
+	public RemoveNeighborData(User sender, User receiver, User removed){
 		this.sender = sender;
 		this.receiver = receiver;
-		this.neighbors = neighbors;
+		this.removed = removed;
 	
 	}
 
 
-	public List<User> getNeighbors(){
-		return this.neighbors;
+	public User getToRemove(){
+		return this.removed;
 	}
 	
 	public int getType(){
-		return Data.NEIGHBOR;
+		return Data.REMOVENEIGHBOR;
 	}
 	
 }

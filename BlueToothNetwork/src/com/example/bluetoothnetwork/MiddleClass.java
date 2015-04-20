@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import android.util.Log;
+
 import com.example.bluetoothnetwork.util.AddNeighborData;
 import com.example.bluetoothnetwork.util.Data;
 import com.example.bluetoothnetwork.util.Device;
@@ -67,18 +69,22 @@ abstract public class MiddleClass extends LowerClass{
 
 	
 	Boolean sendMessage(User user, Message message){ 
-		Data data = new TextData(message.getReceiver(),message.getSender(), message.getMessage());
-//		if (this.userList.contains(user)){
-//			List<Device> availableDevices = this.getAllConnectedDevices();
-//			for (Device d: availableDevices)
-//				this.sendData( d, data);
-//			return true;
-//		}
-//		else
-//			return false;
-		
-		this.onReceivingData(data);
-		return true;
+		Data data = new TextData(message.getSender(),message.getReceiver(), message.getMessage());
+		if (this.userList.contains(user)){
+			Set<String> availableDevices = this.getAllConnectedDevices();
+			for (String s: availableDevices)
+				try {
+					this.sendData( s, serialize(data));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			return true;
+		}
+		else{
+			Log.i("MiddleClass", "no such user");
+			return false;
+		}
 		
 			
 	}
@@ -95,10 +101,10 @@ abstract public class MiddleClass extends LowerClass{
 	void onNewNeighbor(User user) {
 		// TODO Auto-generated method stub
 		this.userList.add(user);
-		List<User> temp = new ArrayList<User>();
-		temp.add(user);
+		//List<User> temp = new ArrayList<User>();
+		//temp.add(user);
 		
-		Data neighborData = new AddNeighborData(this.thisUser, null, temp);
+		Data neighborData = new AddNeighborData(this.thisUser, null, this.userList);
 		
 		Set<String> availableDevices = this.getAllConnectedDevices();
 		for (String s: availableDevices)
@@ -107,7 +113,8 @@ abstract public class MiddleClass extends LowerClass{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		this.onNewUser(temp);
+		//this.onNewUser(temp);
+		this.onNewUser(userList);
 		
 	}
 
@@ -115,10 +122,9 @@ abstract public class MiddleClass extends LowerClass{
 	void onNeighborLeaving(User user) {
 		// TODO Auto-generated method stub
 		this.userList.remove(user);
-		List<User> temp = new ArrayList<User>();
-		temp.add(user);
 		
-		Data neighborData = new RemoveNeighborData(null, null, temp);
+		
+		Data neighborData = new RemoveNeighborData(this.thisUser, null, user);
 		Set<String> availableDevices = this.getAllConnectedDevices();
 		for (String s: availableDevices)
 			try {
@@ -128,7 +134,9 @@ abstract public class MiddleClass extends LowerClass{
 				e.printStackTrace();
 			}
 		
-		this.onUserDisconnect(temp);
+		List<User> userLeaving = new ArrayList<User>();
+		userLeaving.add(user);
+		this.onUserDisconnect(userLeaving);
 		
 	}
 
@@ -136,10 +144,12 @@ abstract public class MiddleClass extends LowerClass{
 	void onReceivingData(Data data) {
 		// TODO Auto-generated method stub
 		if (data.getType() == Data.TEXT){
-			if (data.getReceiver() == this.thisUser){
+			if (data.getReceiver().equals(this.thisUser) ){
 				Message msg = new Message(data.getSender(), data.getReceiver(), ((TextData)data).getText());
 				this.onMessage(msg);
-			}else{
+				Log.i("MiddleClass", ""+((TextData)data).getText());
+
+			}else if (!((TextData)data).checkFootprint(thisUser)){
 				Set<String> availableDevices = this.getAllConnectedDevices();
 				for (String s: availableDevices)
 					try {
@@ -148,6 +158,7 @@ abstract public class MiddleClass extends LowerClass{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				Log.i("MiddleClass", ""+"this is for" + data.getReceiver());
 			}
 		}
 		
@@ -162,25 +173,65 @@ abstract public class MiddleClass extends LowerClass{
 		
 		
 		
-		if (data.getType() == Data.NEIGHBOR){
+		if (data.getType() == Data.ADDNEIGHBOR){
 			// update neighbors
-			Set<String> availableDevices = this.getAllConnectedDevices();
-			for (String s: availableDevices)
-				if (!data.getSender().equals(this.thisUser))
-					try {
-						this.sendData(s, serialize(data));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		}
+			List<User> upcomingUsers = ((AddNeighborData)data).getNeighbors();
 			
+			if (!this.checkEquality(upcomingUsers)){
+				this.onNewUser(this.userList);
+				Set<String> availableDevices = this.getAllConnectedDevices();
+				for (String s: availableDevices)
+					if (!data.getSender().equals(this.thisUser))
+						try {
+							this.sendData(s, serialize(data));
+						} catch (IOException e) {
+						
+							e.printStackTrace();
+						}
+					}
+			}
+		if (data.getType() == Data.REMOVENEIGHBOR){
+			// update neighbors
+			User userToRemove = ((RemoveNeighborData)data).getToRemove();
+			
+			
+			
+			
+			if (this.userList.contains(userToRemove)){
+				List<User> userLeaving = new ArrayList<User>();
+				userLeaving.add(userToRemove);
+				this.onUserDisconnect(userLeaving);
+				Set<String> availableDevices = this.getAllConnectedDevices();
+				for (String s: availableDevices)
+					if (!data.getSender().equals(this.thisUser))
+						try {
+							this.sendData(s, serialize(data));
+						} catch (IOException e) {
+						
+							e.printStackTrace();
+						}
+					}
+			}
+			
+		//Log.i("MiddleClass", ""+this.userList.size());
 		
 		
 	}
 	
 	
-	
+	private Boolean checkEquality(List<User> upcomingUsers){
+		
+		Boolean result = true;
+		for (User u: upcomingUsers){
+			// if not equal to thisUser, or not in the current neighborlist, need to set\
+			// false, add it to current neighborlist
+			if (!u.equals(this.thisUser) && !this.userList.contains(u)){
+				result = false;
+				this.userList.add(u);
+			}
+		}
+		return result;
+	}
 	
 	
 }

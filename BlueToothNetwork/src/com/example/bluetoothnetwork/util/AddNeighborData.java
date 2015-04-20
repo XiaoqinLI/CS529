@@ -38,7 +38,7 @@ public class AddNeighborData implements Data{
 	}
 	
 	public int getType(){
-		return Data.NEIGHBOR;
+		return Data.ADDNEIGHBOR;
 	}
 	
 }

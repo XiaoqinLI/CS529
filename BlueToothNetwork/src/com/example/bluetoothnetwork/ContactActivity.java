@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 
 public class ContactActivity extends Activity {
 	ContactListAdapter adapter;
+	ScheduledExecutorService exec;
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private BroadcastReceiver userUpdateBroadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -72,10 +74,11 @@ public class ContactActivity extends Activity {
 		registerReceiver(
 				userUpdateBroadcastReceiver, new IntentFilter(MessageService.tag_userUpdate));
 		adapter.notifyDataSetChanged();
+		if(BluetoothChatService.unConnectable != null) BluetoothChatService.unConnectable.clear();
 		//in the begining, wait 5 seconds, and then 
 //		mBluetoothAdapter.startDiscovery();
 		
-		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		exec = Executors.newSingleThreadScheduledExecutor();
 		exec.scheduleAtFixedRate(new Runnable() {
 			
 			
@@ -89,7 +92,7 @@ public class ContactActivity extends Activity {
 				  try {
 					Thread.sleep(6000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					Log.e("ContactActivity", "something wrong with thread", e);
 					e.printStackTrace();
 				}
 			 // }
@@ -104,8 +107,10 @@ public class ContactActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		exec.shutdownNow();
 		unregisterReceiver(userUpdateBroadcastReceiver);
 		mBluetoothAdapter.cancelDiscovery();
+		Intent serviceIntent = new Intent(this, MessageService.class);
 	}
 	@Override
 	protected void onStart() {

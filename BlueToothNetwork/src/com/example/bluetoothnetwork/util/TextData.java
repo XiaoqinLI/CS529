@@ -1,4 +1,8 @@
 package com.example.bluetoothnetwork.util;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class TextData implements Data {
 
 	/**
@@ -9,6 +13,7 @@ public class TextData implements Data {
 	private User receiver;
 		
     private String text;
+    private Set<User> footprint = new HashSet<User>();
 	
 	@Override
 	public User getSender() {
@@ -27,6 +32,15 @@ public class TextData implements Data {
 		this.receiver = receiver;
 		this.text = text;
 	
+	}
+	
+	public Boolean checkFootprint(User current){
+		if (this.footprint.contains(current))
+			return true;
+		else{
+			this.footprint.add(current);
+			return false;
+		}
 	}
 
 

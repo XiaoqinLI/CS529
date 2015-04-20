@@ -44,7 +44,6 @@ public class MessageService extends MiddleClass {
 	@Override
 	public void onCreate() {
 		super.onCreate();  
-        //TODO comment out when don't need
         // Get a set of currently paired devices
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(mReceiver, filter);
@@ -52,20 +51,25 @@ public class MessageService extends MiddleClass {
         // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
-		// dummy code
+        String userName = BluetoothAdapter.getDefaultAdapter().getName();
+        String add = BluetoothAdapter.getDefaultAdapter().getAddress();
+        MainActivity.thisUser = new User(userName, macToLong(add));
 		super.init(MainActivity.thisUser);
 		registerReceiver(broadcastReceiver, new IntentFilter(MainActivity.tag));
 //		BluetoothAdapter.getDefaultAdapter().startDiscovery();
+		Log.i(TAG, "I am created!");
+		if (mChatService == null) {
+        	//Log.d(TAG, "mChatService is NULL");
+            setupChat();
+        }
 	}
 	
 	@Override
 	public void onStart(Intent intent, int startId) {
+		Log.i(TAG, "I am started!");
 		// If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
-        if (mChatService == null) {
-        	//Log.d(TAG, "mChatService is NULL");
-            setupChat();
-        }
+        
 	}
 
 //	void sendMessage(Message message) {
@@ -75,11 +79,12 @@ public class MessageService extends MiddleClass {
 	@Override
 	void onNewUser(List<User> updateUsers){
 		for(User singleUser : updateUsers){
+			
 			if(!allUsers.contains(singleUser)){
 				allUsers.add(singleUser);
-				users.add(singleUser);
 			}
 			if(!onlineUsers.contains(singleUser)){
+				users.add(singleUser);
 				onlineUsers.add(singleUser);
 			}
 			if(!userMessage.containsKey(singleUser)) userMessage.put(singleUser, new ArrayList<Message>());
@@ -90,7 +95,11 @@ public class MessageService extends MiddleClass {
 	@Override
 	void onUserDisconnect(List<User> updateUsers){
 		for(User singleUser : updateUsers){
-			if(onlineUsers.contains(singleUser)) onlineUsers.remove(singleUser);
+			if(onlineUsers.contains(singleUser)){
+				onlineUsers.remove(singleUser);
+				users.remove(singleUser);
+			}
+			//TODO we will need this
 		}
 		Intent intent = new Intent(tag_userUpdate);
 		sendBroadcast(intent);
@@ -109,9 +118,8 @@ public class MessageService extends MiddleClass {
 		super.onDestroy();
 		BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
 		mChatService.stop();
-		Log.i("onDestroy", "This service is dead!!!");
+		Log.i(TAG, "I am dead!!!");
 		unregisterReceiver(mReceiver);
 		unregisterReceiver(broadcastReceiver);
-		unregisterReceiver(mReceiver);
 	}
 }

@@ -1,6 +1,13 @@
 package com.example.bluetoothnetwork.util;
 
-public class User {
+import java.io.Serializable;
+
+
+public class User implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8966257220596016755L;
 	private long id;
 	private String userName;
 	public User(String userName, long id){
@@ -20,8 +27,9 @@ public class User {
 		this.userName = userName;
 	}
 	
-	public boolean equals(User o) {
-		return o.getId() == this.getId();
+	@Override
+	public boolean equals(Object o) {
+		return ((User) o).getId() == this.getId();
 	}
 	@Override
 	public int hashCode() {
