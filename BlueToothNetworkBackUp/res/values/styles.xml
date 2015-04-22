@@ -1,0 +1,38 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:actionBarStyle">@style/Actionbar</item>
+        <item name="android:windowAnimationStyle">@style/AnimationLeftAndRight</item>
+    </style>
+    
+    <style name="Actionbar" parent="@android:style/Widget.Holo.ActionBar">
+         <item name="android:background">@drawable/action_bar_bg_apps</item>
+         <item name="android:textColor">@android:color/background_light</item>
+         <item name="android:titleTextStyle">@style/WhiteTitle</item>
+     </style>
+	<style name="AnimationLeftAndRight">
+		<item name="android:activityOpenEnterAnimation">@anim/v4_right_enter</item>
+		<item name="android:activityOpenExitAnimation">@anim/v4_left_exit</item>
+		<item name="android:activityCloseEnterAnimation">@anim/v4_left_enter</item>
+		<item name="android:activityCloseExitAnimation">@anim/v4_right_exit</item>
+	</style>
+	<style name="WhiteTitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+	<item name="android:textColor">@android:color/background_light</item>
+	<item name="android:textSize">19sp</item>
+	</style>
+
+</resources>

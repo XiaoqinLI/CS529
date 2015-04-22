@@ -1,9 +1,7 @@
 package com.example.bluetoothnetwork.util;
 import java.io.Serializable;
-
-
+import java.util.UUID;
 public interface Data extends Serializable {
-
 	
 	static final public int TEXT = 1;
 	static final public int TOPOLOGY = 2;
@@ -13,7 +11,7 @@ public interface Data extends Serializable {
 	public User getSender();
 	public User getReceiver();
 	public int getType();
-	
-
-
+	public UUID getUUID();
+	public long getTime();
+	public Boolean checkFootprint(User current);
 }
