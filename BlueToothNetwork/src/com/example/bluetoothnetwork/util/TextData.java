@@ -1,10 +1,8 @@
 package com.example.bluetoothnetwork.util;
-
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.UUID;
 public class TextData implements Data {
-
 	/**
 	 * 
 	 */
@@ -14,13 +12,14 @@ public class TextData implements Data {
 		
     private String text;
     private Set<User> footprint = new HashSet<User>();
+    private UUID uuid;
+    private long time;
 	
 	@Override
 	public User getSender() {
 		// TODO Auto-generated method stub
 		return this.sender;
 	}
-
 	@Override
 	public User getReceiver() {
 		// TODO Auto-generated method stub
@@ -31,6 +30,9 @@ public class TextData implements Data {
 		this.sender = sender;
 		this.receiver = receiver;
 		this.text = text;
+		this.uuid = UUID.randomUUID();
+		this.time = System.currentTimeMillis();
+		this.footprint.add(sender);
 	
 	}
 	
@@ -42,8 +44,10 @@ public class TextData implements Data {
 			return false;
 		}
 	}
-
-
+	
+	public UUID getUUID(){
+		return this.uuid;
+	}
 	public String getText(){
 		return this.text;
 	}
@@ -51,5 +55,9 @@ public class TextData implements Data {
 	public int getType(){
 		return Data.TEXT;
 	}
-
+	@Override
+	public long getTime() {
+		// TODO Auto-generated method stub
+		return time;
+	}
 }

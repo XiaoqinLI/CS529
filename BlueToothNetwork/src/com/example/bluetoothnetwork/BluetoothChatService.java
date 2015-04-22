@@ -67,6 +67,7 @@ public class BluetoothChatService{
     public Map<String, ConnectedThread> mConnectedThreads = new HashMap<String, ConnectedThread>();
     private int mState;
     public static Set<String> unConnectable = new HashSet<String> ();
+    public Map<String, String> macToName = new HashMap<String, String>();
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -187,7 +188,7 @@ public class BluetoothChatService{
         	mConnectedThread = new ConnectedThread(socket, socketType);
             mConnectedThread.start();
             mConnectedThreads.put(device.getAddress(),mConnectedThread);
-            
+            macToName.put(device.getAddress(), device.getName());
          // Send the name of the connected device back to the UI Activity
             Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
             Bundle bundle = new Bundle();
@@ -217,6 +218,7 @@ public class BluetoothChatService{
         for(String adds : mConnectedThreads.keySet()){
         	mConnectedThreads.remove(adds);
         }
+        macToName.clear();
         if (mConnectedThread != null) {
             mConnectedThread = null;
         }

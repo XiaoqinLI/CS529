@@ -107,10 +107,10 @@ public class ContactActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		exec.shutdownNow();
+		exec.shutdown();
 		unregisterReceiver(userUpdateBroadcastReceiver);
 		mBluetoothAdapter.cancelDiscovery();
-		Intent serviceIntent = new Intent(this, MessageService.class);
+		//Intent serviceIntent = new Intent(this, MessageService.class);
 	}
 	@Override
 	protected void onStart() {

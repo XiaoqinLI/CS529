@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_bg_play"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp" >
+
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical" >
+
+
+        <TextView
+            android:id="@+id/contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:text="Bob Birtch"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="20sp"
+            android:textColor="@color/darkerGreen" />
+
+    </LinearLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="8dp"
+       android:layout_marginStart="8dp"
+       android:layout_marginTop="0dp"
+       android:visibility="visible" >
+
+        <TextView
+            android:id="@+id/is_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:text="online"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray" />
+
+
+
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/is_new_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="new message"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#f4842d" />
+    </LinearLayout>
+
+</LinearLayout>
