@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2014 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.example.bluetoothnetwork;
 
 import android.bluetooth.BluetoothAdapter;
@@ -39,9 +23,9 @@ import java.util.UUID;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
- * connections with other devices. It has a thread that listens for
- * incoming connections, a thread for connecting with a device, and a
- * thread for performing data transmissions when connected.
+ * multiple connections with other devices. It has a thread that listens for
+ * incoming connections(AcceptThread), a thread for connecting with a device(ConnectThread), and
+ * threads(ConnectedTread, mConnectedThreads) for performing data transmissions when connected to other devices.
  */
 public class BluetoothChatService{
     // Debugging
@@ -108,7 +92,7 @@ public class BluetoothChatService{
     }
     
     /**
-     * Return the number of connected socket
+     * Return the number of connected sockets
      */
     public synchronized int getConnectedNumber(){
     	return this.mConnectedThreads.size();
@@ -147,7 +131,6 @@ public class BluetoothChatService{
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
     public synchronized void connect(BluetoothDevice device, boolean secure) {
-//        Log.d(TAG, "connect to: " + device); // print mac address
 
 //         Cancel any thread attempting to make a connection
         if (mState == STATE_CONNECTING) {
@@ -158,12 +141,6 @@ public class BluetoothChatService{
         	Log.i(TAG, "we can not connect right now!!!");
         	return;
         }
-
-//        // Cancel any thread currently running a connection
-//        if (mConnectedThread != null) {
-//            mConnectedThread.cancel();
-//            mConnectedThread = null;
-//        }
 
         // Start the thread to connect with the given device   
         if (!mConnectedThreads.containsKey(device.getAddress()) &&!unConnectable.contains(device.getAddress())){
@@ -242,14 +219,11 @@ public class BluetoothChatService{
      * @see ConnectedThread#write(byte[])
      */
     public void write(byte[] out, String macAddress) {
-        // Create temporary object
-//    	Map<String, ConnectedThread> r = new HashMap<String, ConnectedThread>();
-    	
+        
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
             if (mState != STATE_CONNECTED) return;
 //        	if(mConnectedThreads.size() == 0) return;
-//            r.addAll(mConnectedThreads);
         }
         
         // Perform the write unsynchronized
@@ -272,10 +246,6 @@ public class BluetoothChatService{
      */
     private void connectionLost(String deviceName, String deviceAddress) {
         // Send a failure message back to the Activity
-//        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-//        Bundle bundle = new Bundle();
-//        bundle.putString(Constants.TOAST, "Device connection was lost");
-        
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_LOST);
         Bundle bundle = new Bundle();
         bundle.putString("DEVICEADDRESS", deviceAddress);
@@ -535,6 +505,5 @@ public class BluetoothChatService{
             }
         }
     }
-
 
 }
