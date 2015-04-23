@@ -2,6 +2,11 @@ package com.example.bluetoothnetwork.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+/**
+ * implement data model that is used for communication between 
+ * middle and lower classes.
+ */
 public class TextData implements Data {
 	/**
 	 * 

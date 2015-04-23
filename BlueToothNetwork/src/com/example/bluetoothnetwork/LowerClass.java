@@ -6,7 +6,6 @@ import java.util.Set;
 
 
 import com.example.bluetoothnetwork.util.Data;
-import com.example.bluetoothnetwork.util.Device;
 import com.example.bluetoothnetwork.util.User;
 
 import android.annotation.SuppressLint;
@@ -21,6 +20,12 @@ import android.os.Message;
 import android.util.Log;
 
 
+/**
+ * 
+ * @author Xiaoqin LI, Jieru Song
+ * This class mainly provides Android Service layer that maintains the activities,
+ * and provides the Apis for  Bluetooth discover as well as connections.
+ */
 public abstract  class LowerClass extends Service{
 	//device to user
 	//directedly connected devices
@@ -41,7 +46,6 @@ public abstract  class LowerClass extends Service{
 		//BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
 		
 	} //onNewNeighbor and onNeighborLeaving should be called inside connect(Device device);
-	void disconnect(Device device){}
 	Set<String> getAllConnectedDevices(){return mChatService.mConnectedThreads.keySet();}
 	void dataListener(){} // onReceivingData should be called inside
 	
@@ -144,6 +148,10 @@ public abstract  class LowerClass extends Service{
         mChatService.connect(device, secure);
     }
     
+    /**
+     * whenever there is a new found device, broadcaset Receiver would notice and 
+     * try to connect it if it is not connected.
+     */
     protected final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

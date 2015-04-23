@@ -1,12 +1,13 @@
 package com.example.bluetoothnetwork.util;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+/**
+ * this class creates and maintains the model of new added devices
+ */
 public class AddNeighborData implements Data{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 6136867753139319954L;
 	private User sender;
 	private User receiver;

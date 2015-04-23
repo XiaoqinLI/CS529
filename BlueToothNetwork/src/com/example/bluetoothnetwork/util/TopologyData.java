@@ -2,10 +2,12 @@ package com.example.bluetoothnetwork.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+/**
+ * implement data model that notify the others about the direct neighbors of this user.
+ */
 public class TopologyData implements Data {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 5954890114173062251L;
 	private User sender;
 	private User receiver;

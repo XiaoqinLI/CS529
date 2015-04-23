@@ -1,5 +1,10 @@
 package com.example.bluetoothnetwork.util;
 import java.io.Serializable;
+
+
+/**
+ * The Data model. Interface of the data that used in the middle layer network.
+ */
 import java.util.UUID;
 public interface Data extends Serializable {
 	

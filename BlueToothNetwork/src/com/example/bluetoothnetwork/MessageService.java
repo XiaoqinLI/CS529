@@ -19,6 +19,10 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * This is the class that maintains the UI and provides UI that new joined devices 
+ * and informations. Also, enable the user of current device send data to new connected devices.
+ */
 public class MessageService extends MiddleClass {
 	private static final String TAG = "MessageService";
 	public static final String tag = "com.example.bluetoothnetwork.new_message";

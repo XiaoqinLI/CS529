@@ -22,6 +22,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+/**
+ * Main activity: the activity that starts the project
+ *
+ */
 public class MainActivity extends Activity {
 	public static String tag = "com.example.bluetoothnetwork.send_message";
 	public static User thisUser = new User("me", 65535);

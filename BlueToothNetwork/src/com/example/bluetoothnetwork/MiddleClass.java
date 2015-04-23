@@ -23,7 +23,12 @@ import com.example.bluetoothnetwork.util.TopologyData;
 import com.example.bluetoothnetwork.util.User;
 
 
-
+/**
+ * 
+ * @author Yiding Xu
+ * This class provides the network related finctions and APIs
+ *
+ */
 
 abstract public class MiddleClass extends LowerClass{
 	

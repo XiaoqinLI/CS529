@@ -31,9 +31,6 @@ public class ContactActivity extends Activity {
 			adapter.notifyDataSetChanged();
 		}
 	};
-
-	
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

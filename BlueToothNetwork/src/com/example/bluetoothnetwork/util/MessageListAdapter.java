@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+/**
+ * The list Adapter that used to maintain and
+ * display messages of each paired connected devices
+ */
 public class MessageListAdapter extends BaseAdapter {
 	 
     private Context context;

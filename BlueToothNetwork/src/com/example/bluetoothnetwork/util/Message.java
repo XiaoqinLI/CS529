@@ -1,5 +1,9 @@
 package com.example.bluetoothnetwork.util;
 
+/**
+ * The message data model used in upper layer UI
+ *
+ */
 public class Message {
 	private String message;
 	private User sender;

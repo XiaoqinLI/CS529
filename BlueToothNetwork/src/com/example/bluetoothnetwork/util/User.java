@@ -2,11 +2,11 @@ package com.example.bluetoothnetwork.util;
 
 import java.io.Serializable;
 
-
+/**
+ * device/user model
+ */
 public class User implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -8966257220596016755L;
 	private long id;
 	private String userName;

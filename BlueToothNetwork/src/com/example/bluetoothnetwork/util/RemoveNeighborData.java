@@ -2,10 +2,11 @@ package com.example.bluetoothnetwork.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+/**
+ * implement data , which is used for notifying all reachable users the fact of edge breaks 
+ */
 public class RemoveNeighborData implements Data{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5905212656747057901L;
 	private User sender;
 	private User receiver;

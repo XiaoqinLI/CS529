@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+/**
+ * The adapter that organizes all connected devices.
+ */
 public class ContactListAdapter extends BaseAdapter{
 	private Context context;
     private List<User> contactItems;
