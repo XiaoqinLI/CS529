@@ -1,33 +1,24 @@
 # CS529
 BlueTooth_Network_Project
 
-## Xiaoqin's to do list (before Mid-Term):
-GitHub (Done)
+Authors:
+Li Ding
+Yiding Xu
+Xiaoqin LI
+Jieru Song
 
-Development Environment (Eclipse Done)
+## This is a android project that provide a chatting mobile platform based on a bluetooth based Network.
 
-BlueTooth (android) (Done) 
+The folder "BlueToothNetwork" is the project folder of this applications.
 
-Service (android) (Done)
+'class', 'bin', 'gen' folders should not be concerned since they are systemly generated.
 
-figure out how to multi connect (Done with bug)
+In src folder, all source codes are provided; all model codes are in util folder uner bluetooth network folder
 
-delete popup and confirmation function when connecting. (Done)
+Each source .java file has been documented. 
+Please let us know if you need anything else or have some questions.
 
-update discover list and real pair list (Done)
-
-##********To do and Bug List*********************
-
-Why mChatService is gone when exiting app?? how to not exit.
-	what I knew: it has nothing to do with DeviceListActivity.
-	when exiting app, it calls oncreat, onStart, onResume again...
-	mCharservice somehow got vanished, it is gone, so in onStart, setupChat() is recalled when we initialize a new empty mCharservice...
-	Extend service ? IBinder?
-
-
-Multi connect Maintaining
-
-add connected list.
+Thank you very much.
 
 
 
