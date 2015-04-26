@@ -1,6 +1,5 @@
 package com.example.bluetoothnetwork;
 
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +20,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+/**
+ * this is the upper level class, which is also the main activity
+ * everything start here.
+ */
 public class ContactActivity extends Activity {
 	ContactListAdapter adapter;
 	ScheduledExecutorService exec;

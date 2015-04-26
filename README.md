@@ -16,6 +16,9 @@ The folder "BlueToothNetwork" is the project folder of this applications.
 In src folder, all source codes are provided; all model codes are in util folder uner bluetooth network folder
 
 Each source .java file has been documented. 
+
+Since "ContactActivity" is our main activity, you probably want to start reading from there
+
 Please let us know if you need anything else or have some questions.
 
 Thank you very much.
